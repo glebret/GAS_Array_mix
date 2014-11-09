@@ -1,0 +1,44 @@
+function Melange() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var Test = ss.getSheetByName("Test"); // Liste "Ligne mélangées"
+  //dataSheet.getRange(i+2,dataSheet.getLastColumn()).setValue("BOX_CREATED");
+  
+  var valeurs_dispo = new Array(3183);
+  valeurs_dispo[3183] = new Array(1);
+  valeurs_dispo[3183][0]=0;
+  var nombre_de_lignes_dispo = 3182;
+  
+  var melange = new Array(3182);
+  var ligne_melange =1;
+  
+  //On génère un tableau avec des valeurs croissantes de 1 à 3182
+  for (var ligne=1; ligne < 3183; ++ligne) {
+    valeurs_dispo[ligne]=ligne;
+    //Logger.log(valeurs_dispo[ligne-1][0]);
+  }
+  
+  // on selectionne une par une, au hasard, 3182 valeurs de valeurs_dispo
+  for (var decompte=1; decompte<3183; ++decompte){ //decompte<3183
+    if ((decompte%100)==0) {
+      ss.toast(decompte,'Ligne du mélange');
+    }
+    // On choisi une valeur parmis 3182 valeur dispo
+    var ligne_choisie=Math.ceil(Math.random()*nombre_de_lignes_dispo);
+  
+    // On recopie cette valeur sur la ligne du tableau résultat
+    melange[ligne_melange]=valeurs_dispo[ligne_choisie];
+    //Logger.log(melange[ligne_melange]);
+    ligne_melange=ligne_melange+1
+  
+    // On decale l'ensemble des valeurs de valeur dispo+1 à 3183+1 (la derniere ligne contient 0) VERS valeurs dispo
+    for (var lig=ligne_choisie; lig < 3183; ++lig){
+      valeurs_dispo[lig]=valeurs_dispo[lig+1];
+    }
+    //valeur dispo --  
+    nombre_de_lignes_dispo = nombre_de_lignes_dispo-1;
+  }
+  
+  for (var lig=1;lig<3183;++lig){
+    Test.getRange(lig,1,1,1).setValue(melange[lig]);
+  }
+}
